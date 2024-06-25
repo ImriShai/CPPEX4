@@ -7,332 +7,16 @@
 #include <SFML/Graphics.hpp>
 #include <cmath>
 #include "Node.hpp"
+#include "Iterators.hpp"
 
 using namespace std;
-template <typename T>
-class inOrderIterator
-{
-private:
-    Node<T> *current;
-    stack<Node<T> *> stack;
 
-public:
-    inOrderIterator(Node<T> *root) : current(root)
-    {
-        while (current != nullptr)
-        {
-            stack.push(current);
-            current = current->childrens[0];
-        }
-        if (!stack.empty())
-        {
-            current = stack.top();
-            stack.pop();
-        }
-    }
-
-    bool operator==(const inOrderIterator &other)
-    {
-        return stack.top() == other.stack.top();
-    }
-
-    bool operator!=(const inOrderIterator &other)
-    {
-        return stack.top() != other.stack.top();
-    }
-
-    T &operator*() { return stack.top()->get_value(); }
-
-    Node<T> *operator->() { return stack.top(); }
-
-    inOrderIterator &operator++()
-    {
-        if (current->childrens.size() > 1)
-        {
-            Node<T> *node = current->childrens[1];
-            while (node != nullptr)
-            {
-                stack.push(node);
-                node = node->childrens[0];
-            }
-        }
-        if (!stack.empty())
-        {
-            current = stack.top();
-            stack.pop();
-        }
-        else
-        {
-            current = nullptr;
-        }
-        return *this;
-    }
-};
-
-template <typename T>
-class preOrderIterator
-{
-private:
-    Node<T> *current;
-    stack<Node<T> *> stack;
-
-public:
-    preOrderIterator(Node<T> *root) : current(root)
-    {
-        stack.push(current);
-    }
-
-    bool operator==(const preOrderIterator &other)
-    {
-        return stack.top() == other.stack.top();
-    }
-
-    bool operator!=(const preOrderIterator &other)
-    {
-        return stack.top() != other.stack.top();
-    }
-
-    T &operator*() { return stack.top()->get_value(); }
-
-    Node<T> *operator->() { return stack.top(); }
-
-    preOrderIterator &operator++()
-    {
-        if (!stack.empty())
-        {
-            current = stack.top();
-            stack.pop();
-            for (int i = current->childrens.size() - 1; i >= 0; i--)
-            {
-                stack.push(current->childrens[i]);
-            }
-        }
-        else
-        {
-            current = nullptr;
-        }
-        return *this;
-    }
-};
-
-template <typename T>
-class postOrderIterator
-{
-private:
-    Node<T> *current;
-    stack<Node<T> *> stack;
-    Node<T> *last;
-
-public:
-    postOrderIterator(Node<T> *root) : current(root), last(nullptr)
-    {
-        while (current != nullptr)
-        {
-            stack.push(current);
-            current = current->childrens[0];
-        }
-        if (!stack.empty())
-        {
-            current = stack.top();
-            stack.pop();
-        }
-    }
-
-    bool operator==(const postOrderIterator &other)
-    {
-        return stack.top() == other.stack.top();
-    }
-
-    bool operator!=(const postOrderIterator &other)
-    {
-        return stack.top() != other.stack.top();
-    }
-
-    T &operator*() { return stack.top()->get_value(); }
-
-    Node<T> *operator->() { return stack.top(); }
-
-    postOrderIterator &operator++()
-    {
-        if (current->childrens.size() > 1 && current->childrens[1] != last)
-        {
-            stack.push(current);
-            Node<T> *node = current->childrens[1];
-            while (node != nullptr)
-            {
-                stack.push(node);
-                node = node->childrens[0];
-            }
-        }
-        else
-        {
-            last = current;
-            if (!stack.empty())
-            {
-                current = stack.top();
-                stack.pop();
-            }
-            else
-            {
-                current = nullptr;
-            }
-        }
-        return *this;
-    }
-};
-
-template <typename T>
-class BFSIterator
-{
-private:
-    queue<Node<T>*> queue;
-
-public:
-    BFSIterator(Node<T>* root) {
-        if (root == nullptr) {
-            return;
-        }
-        queue.push(root);
-    }
-
-   T& operator*() {
-        return queue.front()->get_data();
-    }
-
-    Node<T>* operator->() {
-        return queue.front();
-    }
-
-    BFSIterator& operator++() {
-        if (queue.empty()) {
-            return *this;
-        }
-        Node<T>* current = queue.front();
-        queue.pop();
-        for(auto child : current->get_childrens()) {
-            queue.push(child);
-        }
-        return *this;
-    }
-
-   bool operator==(const BFSIterator& other) {
-    // Both iterators are at the end
-    if (queue.empty() && other.queue.empty()) {
-        return true;
-    }
-    // One iterator is at the end, and the other is not
-    if (queue.empty() != other.queue.empty()) {
-        return false;
-    }
-    // Neither iterator is at the end, compare the front of the queues
-    return queue.front() == other.queue.front();
-}
-
-bool operator!=(const BFSIterator& other) {
-    return !(*this == other);
-}
-
-};
-
-template <typename T>
-class DFSIterator
-{
-private:
-    stack<Node<T> *> stack;
-
-public:
-    DFSIterator(Node<T> *root) 
-    {
-        if(root != nullptr)
-        {
-            stack.push(root);
-        }
-    }
-
-    bool operator==(const DFSIterator &other)
-    {
-        return stack.top() == other.stack.top();
-    }
-
-    bool operator!=(const DFSIterator &other)
-    {
-        return stack.top() != other.stack.top();
-    }
-
-    T &operator*() { return stack.top()->get_value(); }
-
-    Node<T> *operator->() { return stack.top(); }
-
-    DFSIterator &operator++()
-    {
-       
-            Node<T>* current = stack.top();
-            stack.pop();
-            for (int i = current->childrens.size() - 1; i >= 0; i--)
-            {
-                stack.push(current->childrens[i]);
-            }
-        
-       
-        return *this;
-    }
-};
-
-template <typename T>
-class heapIterator
-{ // this should convert the tree to a heap and return iterators
-private:
-    Node<T> *current;
-    vector<Node<T> *> heap;
-
-public:
-    heapIterator(Node<T> *root) : current(root)
-    {
-        heap.push_back(current);
-        for (int i = 0; i < heap.size(); i++)
-        {
-            for (Node<T> *child : heap[i]->childrens)
-            {
-                heap.push_back(child);
-            }
-        }
-    }
-
-    bool operator==(const heapIterator &other)
-    {
-        return heap.front() == other.heap.front();
-    }
-
-    bool operator!=(const heapIterator &other)
-    {
-        return heap.front() != other.heap.front();
-    }
-
-    T &operator*() { return heap.front()->get_value(); }
-
-    Node<T> *operator->() { return heap.front(); }
-
-    heapIterator &operator++()
-    {
-        if (!heap.empty())
-        {
-            current = heap.front();
-            heap.erase(heap.begin());
-        }
-        else
-        {
-            current = nullptr;
-        }
-        return *this;
-    }
-};
 
 template <typename T, size_t k = 2>
 class Tree
 {
 private:
     Node<T> *root;
-
 public:
     Tree() : root(nullptr) {}
 
@@ -408,6 +92,14 @@ public:
     {
         return DFSIterator<T>(nullptr);
     }
+    BFSIterator<T> begin()
+    {
+        return BFSIterator<T>(root);
+    }
+    BFSIterator<T> end()
+    {
+        return BFSIterator<T>(nullptr);
+    }
 
     ~Tree()
     {
@@ -422,9 +114,14 @@ public:
         }
         root = nullptr; // clear root
     }
-
-    void draw(sf::RenderWindow &window)
+    /**
+     * @brief Draws the tree on a SFML window.
+     *
+     * @param window The SFML window to draw the tree on.
+     */
+     void draw()
     {
+        sf::RenderWindow window(sf::VideoMode(800, 600), "Tree Visualization");
         while (window.isOpen())
         {
             sf::Event event;
@@ -443,55 +140,71 @@ public:
 
     }
 
+    private:
+    /**
+     * @brief Helper function to recursively draw the tree nodes.
+     *
+     * @param window The SFML window to draw the tree on.
+     * @param node The current node to draw.
+     * @param x The x-coordinate of the current node.
+     * @param y The y-coordinate of the current node.
+     * @param xOffset The x-offset for the child nodes.
+     * @param yOffset The y-offset for the child nodes.
+     * @param level The level of the current node in the tree.
+     */
+
     void drawTree(sf::RenderWindow &window, Node<T> *node, float x, float y, float xOffset, float yOffset, int level)
+{
+    if (!node)
+        return;
+
+    // Draw the node
+    sf::CircleShape circle(20);
+    circle.setFillColor(sf::Color::Green);
+    circle.setPosition(x, y);
+
+    sf::Font font;
+    if (!font.loadFromFile("guiResources/RobotoFlex-Regular.ttf"))
     {
-        if (!node)
-            return;
-
-        // Draw the node
-        sf::CircleShape circle(20);
-        circle.setFillColor(sf::Color::Green);
-        circle.setPosition(x, y);
-
-        sf::Font font;
-        if (!font.loadFromFile("guiResources/RobotoFlex-Regular.ttf"))
-        {
-            std::cerr << "Failed to load font\n";
-            return;
-        }
-
-        sf::Text text;
-        text.setFont(font);
-        text.setString(std::to_string(node->get_data()));
-        text.setCharacterSize(20);
-        text.setFillColor(sf::Color::Black);
-        text.setPosition(x + 10, y + 5);
-
-        // Calculate the positions for the children
-        int numChildren = node->childrens.size();
-        if (numChildren > 0)
-        {
-            float angle = 180.0f / (numChildren + 1);
-            for (size_t i = 0; i < numChildren; ++i)
-            {
-                float childX = x + cos((i + 1) * angle * 3.14159265f / 180.0f) * xOffset;
-                float childY = y + yOffset;
-
-                // Draw the connecting line
-                sf::Vertex line[] = {
-                    sf::Vertex(sf::Vector2f(x + 20, y + 20), sf::Color::Black),
-                    sf::Vertex(sf::Vector2f(childX + 20, childY + 20), sf::Color::Black)};
-                window.draw(line, 2, sf::Lines);
-
-                // Recursively draw the child node
-                drawTree(window, node->childrens[i], childX, childY, xOffset / (1.5f * numChildren), yOffset, level + 1);
-            }
-        }
-
-        window.draw(circle);
-        window.draw(text);
-
+        std::cerr << "Failed to load font\n";
+        return;
     }
+
+    sf::Text text;
+    text.setFont(font);
+    text.setString(std::to_string(node->data));
+    text.setCharacterSize(20);
+    text.setFillColor(sf::Color::Black);
+    text.setPosition(x + 10, y + 5);
+
+    // Calculate the positions for the children
+    int numChildren = node->childrens.size();
+    if (numChildren > 0)
+    {
+        // Calculate the start position for the first child node
+        float startX = x - (xOffset * (numChildren - 1)) / 2.0f;
+
+        for (size_t i = 0; i < numChildren; ++i)
+        {
+            float childX = startX + i * xOffset;
+            float childY = y + yOffset;
+
+            // Draw the connecting line
+            sf::Vertex line[] = {
+                sf::Vertex(sf::Vector2f(x + 20, y + 20), sf::Color::Black),
+                sf::Vertex(sf::Vector2f(childX + 20, childY + 20), sf::Color::Black)};
+            window.draw(line, 2, sf::Lines);
+
+            // Recursively draw the child node
+            drawTree(window, node->childrens[i], childX, childY, xOffset / 1.5f, yOffset, level + 1);
+        }
+    }
+
+    window.draw(circle);
+    window.draw(text);
+}
+
+    
 };
 
 /**
@@ -575,7 +288,7 @@ public:
      */
     preOrderIterator<T> begin_pre_order()
     {
-        return preOrderIterator<T>();
+        return preOrderIterator<T>(root);
     }
 
     /**
@@ -668,6 +381,20 @@ public:
         return heapIterator<T>(nullptr);
     }
 
+
+    BFSIterator<T> begin()
+    {
+        return BFSIterator<T>(root);
+    }  
+
+    BFSIterator<T> end()
+    {
+        return BFSIterator<T>(nullptr);
+    }
+
+
+
+
     /**
      * @brief Destroys the Tree object.
      *
@@ -692,8 +419,9 @@ public:
      *
      * @param window The SFML window to draw the tree on.
      */
-    void draw(sf::RenderWindow &window)
+     void draw()
     {
+        sf::RenderWindow window(sf::VideoMode(800, 600), "Tree Visualization");
         while (window.isOpen())
         {
             sf::Event event;
@@ -709,9 +437,10 @@ public:
 
             window.display();
         }
+
     }
 
-private:
+    private:
     /**
      * @brief Helper function to recursively draw the tree nodes.
      *
@@ -723,52 +452,61 @@ private:
      * @param yOffset The y-offset for the child nodes.
      * @param level The level of the current node in the tree.
      */
+
     void drawTree(sf::RenderWindow &window, Node<T> *node, float x, float y, float xOffset, float yOffset, int level)
+{
+    if (!node)
+        return;
+
+    // Draw the node
+    sf::CircleShape circle(20);
+    circle.setFillColor(sf::Color::Green);
+    circle.setPosition(x, y);
+
+    sf::Font font;
+    if (!font.loadFromFile("guiResources/RobotoFlex-Regular.ttf"))
     {
-        if (!node)
-            return;
-
-        // Draw the node
-        sf::CircleShape circle(20);
-        circle.setFillColor(sf::Color::Green);
-        circle.setPosition(x, y);
-
-        sf::Font font;
-        if (!font.loadFromFile("guiResources/RobotoFlex-Regular.ttf"))
-        {
-            std::cerr << "Failed to load font\n";
-            return;
-        }
-
-        sf::Text text;
-        text.setFont(font);
-        text.setString(std::to_string(node->get_data()));
-        text.setCharacterSize(20);
-        text.setFillColor(sf::Color::Black);
-        text.setPosition(x + 10, y + 5);
-
-        // Calculate the positions for the children
-        int numChildren = node->childrens.size();
-        if (numChildren > 0)
-        {
-            float angle = 180.0f / (numChildren + 1);
-            for (size_t i = 0; i < numChildren; ++i)
-            {
-                float childX = x + cos((i + 1) * angle * 3.14159265f / 180.0f) * xOffset;
-                float childY = y + yOffset;
-
-                // Draw the connecting line
-                sf::Vertex line[] = {
-                    sf::Vertex(sf::Vector2f(x + 20, y + 20), sf::Color::Black),
-                    sf::Vertex(sf::Vector2f(childX + 20, childY + 20), sf::Color::Black)};
-                window.draw(line, 2, sf::Lines);
-
-                // Recursively draw the child node
-                drawTree(window, node->childrens[i], childX, childY, xOffset / (1.5f * numChildren), yOffset, level + 1);
-            }
-        }
-
-        window.draw(circle);
-        window.draw(text);
+        std::cerr << "Failed to load font\n";
+        return;
     }
+
+    sf::Text text;
+    text.setFont(font);
+    text.setString(std::to_string(node->data));
+    text.setCharacterSize(20);
+    text.setFillColor(sf::Color::Black);
+    text.setPosition(x + 10, y + 5);
+
+    // Calculate the positions for the children
+    int numChildren = node->childrens.size();
+    if (numChildren > 0)
+    {
+        // Calculate the start position for the first child node
+        float startX = x - (xOffset * (numChildren - 1)) / 2.0f;
+
+        for (size_t i = 0; i < numChildren; ++i)
+        {
+            float childX = startX + i * xOffset;
+            float childY = y + yOffset;
+
+            // Draw the connecting line
+            sf::Vertex line[] = {
+                sf::Vertex(sf::Vector2f(x + 20, y + 20), sf::Color::Black),
+                sf::Vertex(sf::Vector2f(childX + 20, childY + 20), sf::Color::Black)};
+            window.draw(line, 2, sf::Lines);
+
+            // Recursively draw the child node
+            drawTree(window, node->childrens[i], childX, childY, xOffset / 1.5f, yOffset, level + 1);
+        }
+    }
+
+    window.draw(circle);
+    window.draw(text);
+}
+
+
+
+    
+
+
 };
