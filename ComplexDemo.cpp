@@ -68,7 +68,12 @@ int main()
     {
         cout << node<< ", ";
     } // same as BFS: 1, 2, 3, 4, 5, 6
-    cout << endl;
+    cout << endl << "HeapIterator: ";
+    for (auto node = tree.make_heap_begin(); node != tree.make_heap_end(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } 
+
 
 
     // Now let's create a 4-ary tree.
@@ -94,5 +99,43 @@ int main()
     four_ary_tree.add_sub_node(n2, n8);
     four_ary_tree.add_sub_node(n3, n9);
     four_ary_tree.draw(); // Starting position of the root
+
+    cout<< "PreOrder(DFS): ";
+    for (auto node = four_ary_tree.begin_pre_order(); node != four_ary_tree.end_pre_order(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 
+    cout << endl << "PostOrde(DFS): ";
+    for (auto node = four_ary_tree.begin_post_order(); node != four_ary_tree.end_post_order(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 
+    cout << endl << "InOrder(DFS): ";
+    for (auto node = four_ary_tree.begin_in_order(); node != four_ary_tree.end_in_order(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 
+    cout << endl << "BFS: ";
+    for (auto node = four_ary_tree.begin_bfs(); node != four_ary_tree.end_bfs(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 
+    cout << endl << "DFS: ";
+    for (auto node = four_ary_tree.begin_dfs(); node != four_ary_tree.end_dfs(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 
+    cout << endl << "Range-based for loop(BFS): ";
+    for (auto node : four_ary_tree)
+    {
+        cout << node<< ", ";
+    } // same as BFS: 
+    cout << endl << "HeapIterator(DFS): ";
+    for (auto node = four_ary_tree.make_heap_begin(); node != four_ary_tree.make_heap_end(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    }
+    cout<< endl;
+    
     return 0;
 }

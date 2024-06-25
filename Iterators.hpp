@@ -307,30 +307,37 @@ template <typename T>
 class heapIterator
 { // this should convert the tree to a heap and return iterators
 private:
-    Node<T> *current;
     vector<Node<T> *> heap;
-
 public:
-    heapIterator(Node<T> *root) : current(root)
+    heapIterator(Node<T> *root) 
     {
-        heap.push_back(current);
-        for (int i = 0; i < heap.size(); i++)
+        if (root != nullptr)
         {
-            for (Node<T> *child : heap[i]->childrens)
+            for(auto node = BFSIterator<T>(root); node != BFSIterator<T>(nullptr); ++node)
             {
-                heap.push_back(child);
+                heap.push_back(node.operator->());
             }
-        }
+            //call make_heap of std with the heap vector and a lambda function to compare the values of the nodes
+           std::make_heap(heap.begin(), heap.end(), [](Node<T>* a, Node<T>* b) { return a->get_data() > b->get_data(); });
+    }
     }
 
     bool operator==(const heapIterator &other)
     {
+        if (heap.empty() && other.heap.empty())
+        {
+            return true;
+        }
+        if (heap.empty() != other.heap.empty())
+        {
+            return false;
+        }
         return heap.front() == other.heap.front();
     }
 
     bool operator!=(const heapIterator &other)
     {
-        return heap.front() != other.heap.front();
+        return !(*this == other);
     }
 
     T &operator*() { return heap.front()->get_value(); }
@@ -339,15 +346,11 @@ public:
 
     heapIterator &operator++()
     {
-        if (!heap.empty())
-        {
-            current = heap.front();
-            heap.erase(heap.begin());
-        }
-        else
-        {
-            current = nullptr;
-        }
+       if(!heap.empty()){
+        heap.erase(heap.begin());
+       }
         return *this;
     }
+
+    
 };

@@ -57,7 +57,7 @@ public:
     }
     DFSIterator<T> begin_pre_order()
     {
-        return DFSIterator<T>(nullptr);
+        return DFSIterator<T>(root);
     }
     DFSIterator<T> end_pre_order()
     {
@@ -103,6 +103,15 @@ public:
     {
         return BFSIterator<T>(nullptr);
     }
+    DFSIterator<T> make_heap_begin()
+    {
+        return DFSIterator<T>(root);
+    }
+    DFSIterator<T> make_heap_end()
+    {
+        return DFSIterator<T>(nullptr);
+    }
+
 
     ~Tree()
     {
@@ -480,7 +489,7 @@ public:
      *
      * @return heapIterator<T> An iterator pointing to the beginning of the tree.
      */
-    heapIterator<T> begin_heap()
+    heapIterator<T> make_heap_begin()
     {
         return heapIterator<T>(root);
     }
@@ -490,7 +499,7 @@ public:
      *
      * @return heapIterator<T> An iterator pointing to the end of the tree.
      */
-    heapIterator<T> end_heap()
+    heapIterator<T> make_heap_end()
     {
         return heapIterator<T>(nullptr);
     }

@@ -68,6 +68,11 @@ int main()
     {
         cout << node<< ", ";
     } // same as BFS: 1, 2, 3, 4, 5, 6
+    cout << endl << "Heap Iterator: ";
+    for (auto node = tree.make_heap_begin(); node != tree.make_heap_end(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    }
     cout << endl;
 
 
@@ -87,7 +92,51 @@ int main()
     three_ary_tree.add_sub_node(n2, n5);
     three_ary_tree.draw(); // Starting position of the root
 
-    Node<string> root_str("rootttttttttttttttttttttttttttt");
+     cout<< "PreOrder(DFS): ";
+    for (auto node = three_ary_tree.begin_pre_order(); node != three_ary_tree.end_pre_order(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 1, 2 , 4, 5, 3, 6
+    cout << endl << "PostOrder(DFS): ";
+
+
+    for (auto node = three_ary_tree.begin_post_order(); node != three_ary_tree.end_post_order(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 4, 5, 2, 6, 3, 1
+    cout << endl << "InOrder(DFS): ";
+
+    for (auto node = three_ary_tree.begin_in_order(); node != three_ary_tree.end_in_order(); ++node)
+    {
+        cout << node->get_data() << ", ";
+
+    } // prints: 4, 2, 5, 1, 6, 3
+    cout << endl << "BFS: ";
+
+    for (auto node = three_ary_tree.begin_bfs(); node != three_ary_tree.end_bfs(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 1, 2, 3, 4, 5, 6
+    cout << endl << "DFS: ";
+
+    for (auto node = three_ary_tree.begin_dfs(); node != three_ary_tree.end_dfs(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 1, 2, 4, 5, 3, 6
+    cout << endl << "Range-based for loop(BFS): ";
+
+    for (auto node : three_ary_tree)
+    {
+        cout << node<< ", ";
+    } // same as BFS: 1, 2, 3, 4, 5, 6
+    cout << endl << "Heap Iterator(DFS): ";
+    for (auto node = three_ary_tree.make_heap_begin(); node != three_ary_tree.make_heap_end(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    }
+    cout << endl;
+
+    Node<string> root_str("root");
     Node<string> child1_str("child1");
     Node<string> child2_str("child2");
     Node<string> child3_str("child3");
@@ -101,6 +150,52 @@ int main()
     tree_str.add_sub_node(child1_str, child4_str);
     tree_str.add_sub_node(child2_str, child5_str);
     tree_str.draw(); // Starting position of the root
+     cout<< "PreOrder(DFS): ";
+    for (auto node = tree_str.begin_pre_order(); node != tree_str.end_pre_order(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 1, 2 , 4, 5, 3, 6
+    cout << endl << "PostOrder(DFS): ";
+
+
+    for (auto node = tree_str.begin_post_order(); node != tree_str.end_post_order(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 4, 5, 2, 6, 3, 1
+    cout << endl << "InOrder(DFS): ";
+
+    for (auto node = tree_str.begin_in_order(); node != tree_str.end_in_order(); ++node)
+    {
+        cout << node->get_data() << ", ";
+
+    } // prints: 4, 2, 5, 1, 6, 3
+    cout << endl << "BFS: ";
+
+    for (auto node = tree_str.begin_bfs(); node != tree_str.end_bfs(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 1, 2, 3, 4, 5, 6
+    cout << endl << "DFS: ";
+
+    for (auto node = tree_str.begin_dfs(); node != tree_str.end_dfs(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } // prints: 1, 2, 4, 5, 3, 6
+    cout << endl << "Range-based for loop(BFS): ";
+
+    for (auto node : tree_str)
+    {
+        cout << node<< ", ";
+    } // same as BFS: 1, 2, 3, 4, 5, 6
+    cout << endl << "Heap Iterator(DFS): ";
+    for (auto node = tree_str.make_heap_begin(); node != tree_str.make_heap_end(); ++node)
+    {
+        cout << node->get_data() << ", ";
+    } 
+
+    
+
+
 
 
 
