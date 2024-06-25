@@ -8,13 +8,16 @@ VALGRIND_FLAGS = -v --leak-check=full --show-leak-kinds=all --error-exitcode=99
 # Source and object files
 DEMOSOURCES = Node.hpp Tree.hpp Demo.cpp
 TESTSOURCES = Node.hpp Tree.hpp TestCounter.cpp Test.cpp
+COMPLEXSOURCES = Node.hpp Tree.hpp Complex.cpp ComplexDemo.cpp
+COMPLEXOBJECTS = $(subst .cpp,.o,$(filter %.cpp,$(COMPLEXSOURCES)))
 DEMOOBJECTS = $(subst .cpp,.o,$(filter %.cpp,$(DEMOSOURCES)))
 TESTOBJECTS = $(subst .cpp,.o,$(filter %.cpp,$(TESTSOURCES)))
+
 
 .PHONY: all run demo test tidy valgrind clean
 
 # Default target to build demo and test
-all: demo test
+all: demo complex test
 
 # Run tests
 run: test
@@ -27,6 +30,10 @@ demo: $(DEMOOBJECTS)
 # Build test executable
 test: $(TESTOBJECTS)
 	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o test
+
+# Build complex executable
+complex: $(COMPLEXOBJECTS)
+	$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o complex
 
 # Tidy up the code with clang-tidy
 tidy:

@@ -86,6 +86,24 @@ int main()
     three_ary_tree.add_sub_node(n1, n4);
     three_ary_tree.add_sub_node(n2, n5);
     three_ary_tree.draw(); // Starting position of the root
+
+    Node<string> root_str("rootttttttttttttttttttttttttttt");
+    Node<string> child1_str("child1");
+    Node<string> child2_str("child2");
+    Node<string> child3_str("child3");
+    Node<string> child4_str("child4");
+    Node<string> child5_str("child5");
+    Tree<string,3> tree_str;
+    tree_str.add_root(root_str);
+    tree_str.add_sub_node(root_str, child1_str);
+    tree_str.add_sub_node(root_str, child2_str);
+    tree_str.add_sub_node(root_str, child3_str);
+    tree_str.add_sub_node(child1_str, child4_str);
+    tree_str.add_sub_node(child2_str, child5_str);
+    tree_str.draw(); // Starting position of the root
+
+
+
    
 
     return 0;
