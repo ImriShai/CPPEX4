@@ -71,40 +71,18 @@ int main()
     cout << endl;
 
 
-    // // Now let's create a 3-ary tree.
-    // Node<Complex> root_node = Node<Complex>(Complex(1.1, 1.1));
-    // Node<Complex> n1 = Node<Complex>(Complex(2.2, 2.2));
-    // Node<Complex> n2 = Node<Complex>(Complex(3.3, 3.3));
-    // Node<Complex> n3 = Node<Complex>(Complex(4.4, 4.4));
-    // Node<Complex> n4 = Node<Complex>(Complex(5.5, 5.5));
-    // Node<Complex> n5 = Node<Complex>(Complex(6.6, -6.6));
-    // Node<Complex> n6 = Node<Complex>(Complex(-7.7, 7.7));
-    // Node<Complex> n7 = Node<Complex>(Complex(8.8, 8.8));
-    // Node<Complex> n8 = Node<Complex>(Complex(9.9, 9.9));
-    // Node<Complex> n9 = Node<Complex>(Complex(10.10, 10.10));
-    // Tree<Complex, 4> four_ary_tree; // 4-ary tree.
-    // four_ary_tree.add_root(root_node);
-    // four_ary_tree.add_sub_node(root_node, n1);
-    // four_ary_tree.add_sub_node(root_node, n2);
-    // four_ary_tree.add_sub_node(root_node, n3);
-    // four_ary_tree.add_sub_node(n1, n4);
-    // four_ary_tree.add_sub_node(n2, n5);
-    // four_ary_tree.add_sub_node(n2, n6);
-    // four_ary_tree.add_sub_node(n2, n7);
-    // four_ary_tree.add_sub_node(n2, n8);
-    // four_ary_tree.add_sub_node(n3, n9);
-    // Now let's create a 3-ary tree.
-    Node<string> root_node = Node<string>("root");
-    Node<string> n1 = Node<string>("n1");
-    Node<string> n2 = Node<string>("n2");
-    Node<string> n3 = Node<string>("n3");
-    Node<string> n4 = Node<string>("n4");
-    Node<string> n5 = Node<string>("n5");
-    Node<string> n6 = Node<string>("n6");
-    Node<string> n7 = Node<string>("n7");
-    Node<string> n8 = Node<string>("n8");
-    Node<string> n9 = Node<string>("n9");
-    Tree<string, 4> four_ary_tree; // 4-ary tree.
+    // Now let's create a 4-ary tree.
+    Node<Complex> root_node = Node<Complex>(Complex(1.1, 1.1));
+    Node<Complex> n1 = Node<Complex>(Complex(2.2, 2.2));
+    Node<Complex> n2 = Node<Complex>(Complex(3.3, 3.3));
+    Node<Complex> n3 = Node<Complex>(Complex(4.4, 4.4));
+    Node<Complex> n4 = Node<Complex>(Complex(5.5, 5.5));
+    Node<Complex> n5 = Node<Complex>(Complex(6.6, -6.6));
+    Node<Complex> n6 = Node<Complex>(Complex(-7.7, 7.7));
+    Node<Complex> n7 = Node<Complex>(Complex(8.8, 8.8));
+    Node<Complex> n8 = Node<Complex>(Complex(9.9, 9.9));
+    Node<Complex> n9 = Node<Complex>(Complex(10.10, 10.10));
+    Tree<Complex, 4> four_ary_tree; // 4-ary tree.
     four_ary_tree.add_root(root_node);
     four_ary_tree.add_sub_node(root_node, n1);
     four_ary_tree.add_sub_node(root_node, n2);
@@ -115,22 +93,6 @@ int main()
     four_ary_tree.add_sub_node(n2, n7);
     four_ary_tree.add_sub_node(n2, n8);
     four_ary_tree.add_sub_node(n3, n9);
-    for(auto node : root_node.get_childrens())
-    {
-        cout << node->get_data() << ", ";
-    }
-    cout << endl;
-    for(auto node : n1.get_childrens())
-    {
-        cout << node->get_data() << ", ";
-    }
-    cout << endl;
-    for(auto node : n2.get_childrens())
-    {
-        cout << node->get_data() << ", ";
-    }
-
-
     four_ary_tree.draw(); // Starting position of the root
     return 0;
 }

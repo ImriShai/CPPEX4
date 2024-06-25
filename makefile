@@ -50,4 +50,4 @@ valgrind: demo test
 
 # Clean up the build artifacts
 clean:
-	rm -f *.o demo test
+	rm -f *.o demo test complex
