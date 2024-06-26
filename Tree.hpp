@@ -106,14 +106,6 @@ public:
     {
         return DFSIterator<T>(nullptr);
     }
-    DFSIterator<T> begin_heap()
-    {
-        return DFSIterator<T>(root);
-    }
-    DFSIterator<T> end_heap()
-    {
-        return DFSIterator<T>(nullptr);
-    }
     BFSIterator<T> begin()
     {
         return BFSIterator<T>(root);
