@@ -7,7 +7,7 @@ VALGRIND_FLAGS = -v --leak-check=full --show-leak-kinds=all --error-exitcode=99
 
 # Source and object files
 DEMOSOURCES = Node.hpp Tree.hpp Demo.cpp
-TESTSOURCES = Node.hpp Tree.hpp TestCounter.cpp Test.cpp
+TESTSOURCES = Node.hpp Tree.hpp TestCounter.cpp Test.cpp Complex.cpp
 COMPLEXSOURCES = Node.hpp Tree.hpp Complex.cpp ComplexDemo.cpp
 COMPLEXOBJECTS = $(subst .cpp,.o,$(filter %.cpp,$(COMPLEXSOURCES)))
 DEMOOBJECTS = $(subst .cpp,.o,$(filter %.cpp,$(DEMOSOURCES)))

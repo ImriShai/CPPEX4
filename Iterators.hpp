@@ -6,59 +6,114 @@
 using namespace std;
 
 
+
+/**
+ * @brief In Order Iterator class for the Tree class
+ */
 template <typename T>
 class inOrderIterator
 {
 private:
     
     vector<Node<T> *> it;
+    /**
+     * @brief Recursive function to traverse the tree in in order
+     * @param root The root of the tree
+     * @return vector<Node<T>*> The vector of nodes in in order
+     * The function is a helper function for the constructor, it recursively traverses the tree in in order, and saves the nodes in a vector 
+     * for the iterator to use
+     */
     vector<Node<T> *> recursive(Node<T> *root)
     {
-        vector<Node<T> *> result;
-        if (root == nullptr)
+        vector<Node<T> *> result; //create a vector to store the nodes
+        if (root == nullptr) //if the root is null return an empty vector
         {
             return result;
         }
-        for (Node<T> *child : root->childrens)
-        {
-            vector<Node<T> *> temp = recursive(child);
-            result.insert(result.end(), temp.begin(), temp.end());
+        if(root->childrens.size() == 0){ //if the root has no childrens
+            result.push_back(root); //push the root in the vector
         }
-        result.push_back(root);
-        return result;
+       if(root->childrens.size() == 1){ //if the root has childrens
+              vector<Node<T> *> temp = recursive(root->childrens[0]); //call the recursive function for the left child
+              result.insert(result.end(), temp.begin(), temp.end()); //insert the result of the recursive call in the result vector
+              result.push_back(root); //push the root in the result vector
+       }
+
+       if(root->childrens.size() == 2){ //if the root has 2 childrens
+           vector<Node<T> *> temp = recursive(root->childrens[0]); //call the recursive function for the left child
+           result.insert(result.end(), temp.begin(), temp.end()); //insert the result of the recursive call in the result vector
+           result.push_back(root); //push the root in the result vector
+           vector<Node<T> *> temp2 = recursive(root->childrens[1]); //call the recursive function for the right child
+           result.insert(result.end(), temp2.begin(), temp2.end()); //insert the result of the recursive call in the result vector
+       } 
+        return result; //return the result vector
     }
+
 
 public:
+    /**
+     * @brief Construct a new in Order Iterator object
+     * @param root The root of the tree
+     * The constructor calls the recursive function to traverse the tree in in order and save the nodes in the vector
+     */
     inOrderIterator(Node<T> *root) 
     {
-        if (root != nullptr)
+        if (root != nullptr)//if the root is not null
         {
-            it = recursive(root);
+            it = recursive(root); //call the recursive function
         }
     }
 
+/**
+ * @brief Overloaded == operator
+ * @param other The other iterator to compare with
+ * @return true If the iterators are equal
+ * @return false If the iterators are not equal
+ * The operator checks if the iterators are equal by checking if the vectors are empty and if the first elements of the vectors are equal
+ */
     bool operator==(const inOrderIterator &other)
     {
-        if (it.empty() && other.it.empty())
+        if (it.empty() && other.it.empty()) //if both vectors are empty return true
         {
             return true;
         }
-        if (it.empty() != other.it.empty())
+        
+        if (it.empty() != other.it.empty())//if one of the vectors is empty and the other is not return false
         {
             return false;
         }
-        return it.front() == other.it.front();
+        return it.front() == other.it.front();//return the comparison of the first elements of the vectors(the Node*)
     }
-
+/**
+ * @brief Overloaded != operator
+ * @param other The other iterator to compare with
+ * @return true If the iterators are not equal
+ * @return false If the iterators are equal
+ * The operator checks if the iterators are not equal by calling the == operator and negating the result
+ */
     bool operator!=(const inOrderIterator &other)
     {
-        return !(*this == other);
+        return !(*this == other); //return the negation of the == operator
     }
 
-    T &operator*() { return it.front()->get_value(); }
 
+/**
+ * @brief Overloaded * operator
+ * @return T& The data of the node at the front of the vector(the current iterator position)
+ */
+    T &operator*() { return it.front()->get_data(); } 
+
+/**
+ * @brief Overloaded -> operator
+ * @return Node<T>* The pointer to the node at the front of the vector(the current iterator position)
+ */
     Node<T> *operator->() { return it.front(); }
 
+/**
+ * @brief Overloaded ++ operator
+ * @return inOrderIterator& The iterator after the increment
+ * The operator increments the iterator by erasing the first element of the vector
+ */
     inOrderIterator &operator++()
     {
         if (!it.empty())
@@ -69,26 +124,38 @@ public:
     }
 };
 
+//NOTICE: for every other class most of the code is the same, only the recursive function is different, therfore only the recursive function will be explained
+
+
+
+
 template <typename T>
 class preOrderIterator
 {
 private:
    
     vector<Node<T> *> stack;
+
+    /**
+     * @brief Recursive function to traverse the tree in pre order
+     * @param root The root of the tree
+     * @return vector<Node<T>*> The vector of nodes in pre order
+     * The function is a helper function for the constructor, it recursively traverses the tree in pre order, and saves the nodes in a vector
+     */
     vector<Node<T> *> recursive(Node<T> *root)
     {
-        vector<Node<T> *> result;
-        if (root == nullptr)
+        vector<Node<T> *> result; //create a vector to store the nodes
+        if (root == nullptr) //if the root is null return an empty vector
         {
             return result;
         }
-        result.push_back(root);
-        for (Node<T> *child : root->childrens)
+        result.push_back(root); //push the root in the vector
+        for (Node<T> *child : root->childrens) //for each child of the root call the recursive function(only 2 cildrens at max)
         {
-            vector<Node<T> *> temp = recursive(child);
-            result.insert(result.end(), temp.begin(), temp.end());
+            vector<Node<T> *> temp = recursive(child); //store the result of the recursive call in a temporary vector
+            result.insert(result.end(), temp.begin(), temp.end()); //insert the temporary vector in the result vector, at the end
         }
-        return result;
+        return result; //return the result vector
     }
 
 public:
@@ -118,7 +185,7 @@ public:
         return !(*this == other);
     }
 
-    T &operator*() { return stack.front()->get_value(); }
+    T &operator*() { return stack.front()->get_data(); }
 
     Node<T> *operator->() { return stack.front(); }
 
@@ -137,7 +204,14 @@ class postOrderIterator
 {
 private:
     vector<Node<T> *> stk;
-    vector<Node<T> *> recursive(Node<T> *root)
+
+    /**
+     * @brief Recursive function to traverse the tree in post order
+     * @param root The root of the tree
+     * @return vector<Node<T>*> The vector of nodes in post order
+     * The function is a helper function for the constructor, it recursively traverses the tree in post order, and saves the nodes in a vector
+     */
+    vector<Node<T> *> recursive(Node<T> *root) //does the same but in different order, first the childrens then the root
     {
         vector<Node<T> *> result;
         if (root == nullptr)
@@ -181,7 +255,7 @@ public:
         return !(*this == other);
     }
 
-    T &operator*() { return stk.front()->get_value(); }
+    T &operator*() { return stk.front()->get_data(); }
 
     Node<T> *operator->() { return stk.front(); }
 
@@ -199,14 +273,14 @@ template <typename T>
 class BFSIterator
 {
 private:
-    queue<Node<T>*> queue;
+    queue<Node<T>*> queue; //queue to store the nodes
 
 public:
     BFSIterator(Node<T>* root) {
-        if (root == nullptr) {
+        if (root == nullptr) { //if the root is null return
             return;
         }
-        queue.push(root);
+        queue.push(root); //push the root in the queue
     }
 
    T& operator*() {
@@ -220,28 +294,30 @@ public:
         return queue.front();
     }
 
+/**
+ * @brief Overloaded ++ operator
+ * @return BFSIterator& The iterator after the increment
+ * The operator increments the iterator by popping the first element of the queue and pushing the childrens of the node in the queue
+ */
     BFSIterator& operator++() {
-        if (queue.empty()) {
+        if (queue.empty()) { //if the queue is empty return
             return *this;
         }
-        Node<T>* current = queue.front();
-        queue.pop();
-        for(auto& child : current->get_childrens()) {
+        Node<T>* current = queue.front(); //get the first element of the queue
+        queue.pop(); //pop the first element
+        for(auto& child : current->get_childrens()) { //for each child of the current node push the child in the queue
             queue.push(child);
         }
-        return *this;
+        return *this; //return the iterator
     }
 
    bool operator==(const BFSIterator& other) {
-    // Both iterators are at the end
     if (queue.empty() && other.queue.empty()) {
         return true;
     }
-    // One iterator is at the end, and the other is not
     if (queue.empty() != other.queue.empty()) {
         return false;
     }
-    // Neither iterator is at the end, compare the front of the queues
     return queue.front() == other.queue.front();
 }
 
@@ -255,12 +331,12 @@ template <typename T>
 class DFSIterator
 {
 private:
-    stack<Node<T> *> stack;
+    stack<Node<T> *> stack; //stack to store the nodes
 
 public:
     DFSIterator(Node<T> *root) 
     {
-        if(root != nullptr)
+        if(root != nullptr) //if the root is not null push the root in the stack
         {
             stack.push(root);
         }
@@ -284,40 +360,52 @@ public:
         return !(*this == other);
     }
 
-    T &operator*() { return stack.top()->get_value(); }
+    T &operator*() { return stack.top()->get_data(); }
 
     Node<T> *operator->() { return stack.top(); }
 
+
+/**
+ * @brief Overloaded ++ operator
+ * @return DFSIterator& The iterator after the increment
+ * The operator increments the iterator by popping the top element of the stack and pushing the childrens of the node in the stack
+ */
     DFSIterator &operator++()
     {
-       
-            Node<T>* current = stack.top();
-            stack.pop();
-            for (int i = current->childrens.size() - 1; i >= 0; i--)
+            Node<T>* current = stack.top(); //get the top element of the stack
+            stack.pop(); //pop the top element
+            for (int i = current->childrens.size() - 1; i >= 0; i--) //for each child of the current node push the child in the stack, this creates a reverse order of the childrens
+            //which is the same as DFS
             {
                 stack.push(current->childrens[(size_t)i]);
             }
         
        
-        return *this;
+        return *this; //return the iterator
     }
 };
 
 template <typename T>
 class heapIterator
-{ // this should convert the tree to a heap and return iterators
+{ 
 private:
-    vector<Node<T> *> heap;
+    vector<Node<T> *> heap; //vector to store the nodes
 public:
+
+/**
+ * @brief Construct a new heap Iterator object
+ * @param root The root of the tree
+ * The constructor calls the BFSIterator to traverse the tree in BFS and save the nodes in the vector, then it calls the make_heap function of std
+ */
     heapIterator(Node<T> *root) 
     {
         if (root != nullptr)
         {
-            for(auto node = BFSIterator<T>(root); node != BFSIterator<T>(nullptr); ++node)
+            for(auto node = BFSIterator<T>(root); node != BFSIterator<T>(nullptr); ++node) //iterate through the tree in BFS, and push the nodes in the vector
             {
                 heap.push_back(node.operator->());
             }
-            //call make_heap of std with the heap vector and a lambda function to compare the values of the nodes
+            //call make_heap of std with the heap vector and a lambda function to compare the values of the nodes, creating a min heap(for the current status of the tree)
            std::make_heap(heap.begin(), heap.end(), [](Node<T>* a, Node<T>* b) { return a->get_data() > b->get_data(); });
     }
     }
@@ -340,7 +428,7 @@ public:
         return !(*this == other);
     }
 
-    T &operator*() { return heap.front()->get_value(); }
+    T &operator*() { return heap.front()->get_data(); }
 
     Node<T> *operator->() { return heap.front(); }
 

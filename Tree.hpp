@@ -14,6 +14,12 @@
 
 using namespace std;
 
+/**
+ * @brief A template class representing a Tree data structure.
+ *
+ * @tparam T The type of data stored in the tree.
+ * @tparam k The maximum number of children each node can have. Default is 2.
+ */
 template <typename T, size_t k = 2>
 class Tree
 {
@@ -21,11 +27,16 @@ private:
     Node<T> *root;
 
 public:
-    Tree() : root(nullptr) {}
+    Tree() : root(nullptr) {} // Constructor, initializes the root to nullptr
 
+/**
+ * @brief Adds a root node to the tree.
+ * @param root The root node to be added.
+ * @throw std::runtime_error if the root already exists.
+ */
     void add_root(Node<T> &root)
     {
-        if (this->root == nullptr)
+        if (this->root == nullptr) // If the root is empty, set the root to the given root
         {
             this->root = &root;
         }
@@ -35,18 +46,26 @@ public:
         }
     }
 
+
+/**
+ * @brief Adds a child node to a parent node in the tree.
+ * @param parent The parent node.
+ * @param child The child node to be added.
+ * @throw std::runtime_error if the parent already has k children.
+ */
     void add_sub_node(Node<T> &parent, Node<T> &child)
     {
-        if (parent.childrens.size() < k)
+        if (parent.childrens.size() < k) // If the parent has less than k children, add the child to the parent
         {
             parent.add_child(child);
         }
         else
         {
-            throw std::runtime_error("Parent has already k childrens");
+            throw std::runtime_error("Parent has already k childrens"); // If the parent has k children, throw an error
         }
     }
-
+// Iterator functions, as required by the assignment, if the tree has k!=2 children all binary tree iterators will be DFS iterators
+// For each iterator, the begin function returns an iterator pointing to the beginning of the tree, and the end function returns an iterator pointing to the end of the tree.
     DFSIterator<T> begin_in_order()
     {
         return DFSIterator<T>(root);
@@ -112,7 +131,11 @@ public:
         return DFSIterator<T>(nullptr);
     }
 
-
+/**
+ * @brief Destroys the Tree object.
+ * This function clears all child nodes from the parent nodes and sets the root to nullptr.
+ * This function is called when the Tree object goes out of scope.
+ */
     ~Tree()
     {
         vector<Node<T> *> nodes; // vector to store all nodes
@@ -133,21 +156,21 @@ public:
      */
     void draw()
     {
-        sf::RenderWindow window(sf::VideoMode(800, 600), "Tree Visualization");
-        while (window.isOpen())
+        sf::RenderWindow window(sf::VideoMode(800, 600), "Tree Visualization"); // Create a window
+        while (window.isOpen()) // While the window is open
         {
-            sf::Event event;
-            while (window.pollEvent(event))
+            sf::Event event; // Create an event
+            while (window.pollEvent(event)) // While there are events to process
             {
-                if (event.type == sf::Event::Closed)
+                if (event.type == sf::Event::Closed) // If the event is a close event, close the window
                     window.close();
             }
 
-            window.clear(sf::Color::White);
+            window.clear(sf::Color::White); // Clear the window, set the background color to white
 
-            drawTree(window, root, 400, 50, 150, 100, 0);
+            drawTree(window, root, 400, 50, 150, 100, 0); //calls the drawTree function to draw the tree
 
-            window.display();
+            window.display(); // Display the window
         }
     }
 
@@ -156,17 +179,17 @@ private:
     // Helper function to format numbers with a specific precision
     std::string formatData(const T &data, int precision = 5)
     {
-        std::stringstream ss;
-        ss << std::fixed << std::setprecision(precision) << data;
-        return ss.str();
+        std::stringstream ss; // Create a stringstream
+        ss << std::fixed << std::setprecision(precision) << data; // Set the precision of the stringstream
+        return ss.str(); // Return the string
     }
 
     // Helper function to truncate text and add ellipsis if necessary
     std::string truncateText(const sf::Text &text, float maxWidth)
     {
-        std::string str = text.getString();
-        std::string truncatedStr = str;
-        sf::Text tempText = text;
+        std::string str = text.getString(); // Get the string from the text
+        std::string truncatedStr = str; // Set the truncated string to the original string
+        sf::Text tempText = text; // Create a temporary text object
 
         // Check if the text width exceeds the maximum allowed width
         if (text.getLocalBounds().width > maxWidth)
@@ -174,10 +197,10 @@ private:
             // Find the maximum length that fits within the width
             for (size_t i = 0; i < str.size(); ++i)
             {
-                truncatedStr = str.substr(0, i) + "...";
-                tempText.setString(truncatedStr);
+                truncatedStr = str.substr(0, i) + "..."; // Add ellipsis to the string
+                tempText.setString(truncatedStr); // Set the string of the temporary text object
 
-                if (tempText.getLocalBounds().width > maxWidth)
+                if (tempText.getLocalBounds().width > maxWidth) //if the text is too long, truncate it
                 {
                     truncatedStr = str.substr(0, i - 1) + "...";
                     break;
@@ -188,10 +211,10 @@ private:
     }
 
     /**
-     * @brief Helper function to calculate the max width of a subtree.
+     * @brief Helper function to calculate the max width of a subtree. this function is used to prevent overlapping of nodes in the tree visualization.
      * @param node The root node of the subtree.
      * @param xOffset The x-offset for the child nodes.
-     * @return float The width of the subtree.
+     * @return the maximum width of the subtree as a float.
      */
 float calculateSubtreeWidth(Node<T> *node, float xOffset)
 {
@@ -241,7 +264,7 @@ void drawTree(sf::RenderWindow &window, Node<T> *node, float x, float y, float x
         return;
     }
 
-    // Format the node data for display
+    // Format the node data for display with a precision of 5
     std::string nodeDataStr = formatData(node->data);
 
     // Create the text for the node data
@@ -330,8 +353,16 @@ void drawTree(sf::RenderWindow &window, Node<T> *node, float x, float y, float x
 }
 };
 
+
+
+
+
+
+
+
+
 /**
- * @brief A template class representing a Tree data structure.
+ * @brief A template class representing a Tree data structure. This specialization is for a binary tree.
  *
  * @tparam T The type of data stored in the tree.
  */
@@ -592,6 +623,10 @@ private:
         }
         return truncatedStr;
     }
+
+//Notice that the function calculateSubtreeWidth is not defined in this specialization, as it is only used in the general case of the Tree class.
+//In binary tree no overlapping of nodes is possible, so we don't need to calculate the width of the subtree.
+
 
  /**
      * @brief Helper function to recursively draw the tree nodes.
