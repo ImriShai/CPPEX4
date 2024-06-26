@@ -1,7 +1,10 @@
-# Tree Data Structure with SFML Visualization
+# Tree Data Structure and Iterators with SFML Visualization
 ## Overview
 This project implements a tree data structure in C++ that can handle a variable number of children per node. It also provides visualization capabilities using the Simple and Fast Multimedia Library (SFML). The code supports both generic trees and binary trees, with different traversal iterators and methods to add nodes and visualize the tree.
 
+## Author
+- [Imri Shai](https://github.com/ImriShai)
+- Email: imrish149@gmail.com
 ## Features
 **Generic Tree Structure**: The Tree class can handle any type of data and can have any number of children per node, specified by a template parameter k.
 
