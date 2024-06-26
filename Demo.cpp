@@ -194,18 +194,12 @@ int main()
     } 
     cout << endl;
 
-    Node<int> root1(1);
-    Node<int> child1_1(1);
-    
-    Tree<int> testTree;
-    testTree.add_root(root1);
-    testTree.add_sub_node(root1, child1_1); 
-    auto bfs = testTree.begin_bfs();
-    auto bfs1 = testTree.begin_bfs();
-    ++bfs;
-    cout<< bfs->get_data() << endl;
-    cout<< bfs1->get_data() << endl;
-    cout << "Comparing two different trees: " << (bfs == bfs1) << endl;
+    Node<int> root_int(1);
+    Node<int> right(2);
+    Tree<int> tree_int;
+    tree_int.add_root(root_int);
+    tree_int.add_sub_node(root_int, right);
+    tree_int.draw(); // Starting position of the root
 
 
     

@@ -6,84 +6,58 @@
 using namespace std;
 
 
-
-/**
+ /**
  * @brief In Order Iterator class for the Tree class
- */
+*/
 template <typename T>
 class inOrderIterator
 {
-private:
-    
-    vector<Node<T> *> it;
-    /**
-     * @brief Recursive function to traverse the tree in in order
-     * @param root The root of the tree
-     * @return vector<Node<T>*> The vector of nodes in in order
-     * The function is a helper function for the constructor, it recursively traverses the tree in in order, and saves the nodes in a vector 
-     * for the iterator to use
-     */
-    vector<Node<T> *> recursive(Node<T> *root)
-    {
-        vector<Node<T> *> result; //create a vector to store the nodes
-        if (root == nullptr) //if the root is null return an empty vector
-        {
-            return result;
-        }
-        if(root->childrens.size() == 0){ //if the root has no childrens
-            result.push_back(root); //push the root in the vector
-        }
-       if(root->childrens.size() == 1){ //if the root has childrens
-              vector<Node<T> *> temp = recursive(root->childrens[0]); //call the recursive function for the left child
-              result.insert(result.end(), temp.begin(), temp.end()); //insert the result of the recursive call in the result vector
-              result.push_back(root); //push the root in the result vector
-       }
+    private: 
+    stack<Node<T> *> stack; //stack to store the nodes
+    public:
 
-       if(root->childrens.size() == 2){ //if the root has 2 childrens
-           vector<Node<T> *> temp = recursive(root->childrens[0]); //call the recursive function for the left child
-           result.insert(result.end(), temp.begin(), temp.end()); //insert the result of the recursive call in the result vector
-           result.push_back(root); //push the root in the result vector
-           vector<Node<T> *> temp2 = recursive(root->childrens[1]); //call the recursive function for the right child
-           result.insert(result.end(), temp2.begin(), temp2.end()); //insert the result of the recursive call in the result vector
-       } 
-        return result; //return the result vector
-    }
-
-
-public:
     /**
      * @brief Construct a new in Order Iterator object
      * @param root The root of the tree
-     * The constructor calls the recursive function to traverse the tree in in order and save the nodes in the vector
+     * The constructor creates an in order iterator for the tree, by pushing the nodes in the stack in the correct order
+     * The constructor pushes the nodes in the stack in the correct order, by pushing the entire left branch of the tree in the stack
      */
     inOrderIterator(Node<T> *root) 
     {
-        if (root != nullptr)//if the root is not null
+        stack.push(nullptr); //push a null pointer in the stack
+        while (root != nullptr) //while the root is not null
         {
-            it = recursive(root); //call the recursive function
+           stack.push(root); //push the root in the stack
+           if(root->childrens.size() >=1 ) //if the root has childrens push the left child in the stack
+           {
+               root = root->childrens[0]; 
+           }
+           else
+           {
+               root = nullptr;
+           }
         }
     }
-
 /**
  * @brief Overloaded == operator
  * @param other The other iterator to compare with
  * @return true If the iterators are equal
  * @return false If the iterators are not equal
- * The operator checks if the iterators are equal by checking if the vectors are empty and if the first elements of the vectors are equal
+ * The operator checks if the iterators are equal by comparing the top elements of the stacks
  */
     bool operator==(const inOrderIterator &other)
     {
-        if (it.empty() && other.it.empty()) //if both vectors are empty return true
+        if (stack.empty() && other.stack.empty()) //if both stacks are empty return true
         {
             return true;
         }
-        
-        if (it.empty() != other.it.empty())//if one of the vectors is empty and the other is not return false
+        if (stack.empty() != other.stack.empty()) //if only one of the stacks is empty return false
         {
             return false;
         }
-        return it.front() == other.it.front();//return the comparison of the first elements of the vectors(the Node*)
+        return stack.top() == other.stack.top(); //return the comparison of the top elements of the stacks
     }
+
 /**
  * @brief Overloaded != operator
  * @param other The other iterator to compare with
@@ -96,74 +70,65 @@ public:
         return !(*this == other); //return the negation of the == operator
     }
 
-
 /**
  * @brief Overloaded * operator
- * @return T& The data of the node at the front of the vector(the current iterator position)
+ * @return T& The data of the top element of the stack
+ * The operator returns the data of the top element of the stack
  */
-    T &operator*() { return it.front()->get_data(); } 
+    T &operator*() { return stack.top()->get_data(); }
 
-/**
- * @brief Overloaded -> operator
- * @return Node<T>* The pointer to the node at the front of the vector(the current iterator position)
- */
-    Node<T> *operator->() { return it.front(); }
+
+ /**
+  * @brief Overloaded -> operator
+  * @return Node<T>* The top element of the stack
+  * The operator returns the top element of the stack
+  */
+    Node<T> *operator->() { return stack.top(); }
+
 
 /**
  * @brief Overloaded ++ operator
  * @return inOrderIterator& The iterator after the increment
- * The operator increments the iterator by erasing the first element of the vector
+ * The operator increments the iterator by popping the top element of the stack and pushing the right child of the node in the stack
+ * If the right child has childrens, the operator pushes the left child of the right child in the stack, and so on
+ * This way the operator traverses the tree in in order
  */
     inOrderIterator &operator++()
     {
-        if (!it.empty())
+        Node<T> *current = stack.top(); //get the top element of the stack
+        stack.pop(); //pop the top element
+        if (current->childrens.size() == 2) //if the current node has a right child it pushes it to the stack
         {
-            it.erase(it.begin());
+            stack.push(current->childrens[1]);
+            Node<T> *temp = current->childrens[1];
+            while (temp->childrens.size() >= 1) //then, it pushes the left branch of the right child in the stack
+            {
+                stack.push(temp->childrens[0]);
+                temp = temp->childrens[0];
+            }
         }
-        return *this;
+        return *this; //return the iterator
     }
+
+
 };
 
 //NOTICE: for every other class most of the code is the same, only the recursive function is different, therfore only the recursive function will be explained
 
 
 
-
 template <typename T>
 class preOrderIterator
 {
-private:
-   
-    vector<Node<T> *> stack;
+    private:
+    stack<Node<T> *> stack;
+    public:
 
-    /**
-     * @brief Recursive function to traverse the tree in pre order
-     * @param root The root of the tree
-     * @return vector<Node<T>*> The vector of nodes in pre order
-     * The function is a helper function for the constructor, it recursively traverses the tree in pre order, and saves the nodes in a vector
-     */
-    vector<Node<T> *> recursive(Node<T> *root)
-    {
-        vector<Node<T> *> result; //create a vector to store the nodes
-        if (root == nullptr) //if the root is null return an empty vector
-        {
-            return result;
-        }
-        result.push_back(root); //push the root in the vector
-        for (Node<T> *child : root->childrens) //for each child of the root call the recursive function(only 2 cildrens at max)
-        {
-            vector<Node<T> *> temp = recursive(child); //store the result of the recursive call in a temporary vector
-            result.insert(result.end(), temp.begin(), temp.end()); //insert the temporary vector in the result vector, at the end
-        }
-        return result; //return the result vector
-    }
-
-public:
     preOrderIterator(Node<T> *root) 
     {
         if (root != nullptr)
         {
-            stack = recursive(root);
+            stack.push(root); //push the root in the stack
         }
     }
 
@@ -177,7 +142,7 @@ public:
         {
             return false;
         }
-        return stack.front() == other.stack.front();
+        return stack.top() == other.stack.top();
     }
 
     bool operator!=(const preOrderIterator &other)
@@ -185,19 +150,23 @@ public:
         return !(*this == other);
     }
 
-    T &operator*() { return stack.front()->get_data(); }
+    T &operator*() { return stack.top()->get_data(); }
 
-    Node<T> *operator->() { return stack.front(); }
+    Node<T> *operator->() { return stack.top(); }
 
     preOrderIterator &operator++()
     {
-        if (!stack.empty())
+        Node<T> *current = stack.top(); //get the top element of the stack
+        stack.pop(); //pop the top element
+        for (int i = current->childrens.size() - 1; i >= 0; i--) //for each child of the current node push the child in the stack, this creates a reverse order of the childrens, 
+        //first the right if exists, then the left if exists. 
         {
-            stack.erase(stack.begin());
+            stack.push(current->childrens[(size_t)i]);
         }
-        return *this;
+        return *this; //return the iterator
     }
 };
+
 
 template <typename T>
 class postOrderIterator
