@@ -1,35 +1,132 @@
-# עצים - STL, Templates, and Iterators
-עץ הוא גרף קשיר ללא מעגלים. באלגוריתמים 1 למדתם על אלגוריתמים לסריקה של גרף (כמו BFS ו-DFS).
-במטלה הזאת אתם תממשו קונטיינר המייצג עץ k-ארי (עץ k-ארי הוא עץ שבו לכל קודקוד יש לכל היותר k ילדים. למשל, עץ בינארי הוא עץ 2-ארי.) גנרי שמכיל מפתחות מכל סוג (למשל מספרים, מחרוזות ומחלקות). 
-המצב הדיפולטיבי של העץ הוא עץ בינארי (כלומר k=2). בשלב היצירה של הקונטיינר עליכם יהיה לציין את הסוג של המפתחות שהוא מכיל ואת מספר הילדים המקסימלי שיכול להיות לכל קודקוד. אם המספר הזה לא צוין, העץ יהיה עץ בינארי.
-עליכם לממש את האיטרטורים הבאים:
-1. איטרטור Pre-Order - איטרטור הסורק את העץ בצורה הבאה: צומת נוכחית -> תת עץ שמאלי -> תת עץ ימני (האיטרטור הזה עובד בצורה הזאת עבור עץ בינארי בלבד! עבור עץ כללי החזירו סריקת DFS רגילה שמתחילה מהשורש של העץ).
-2. איטרטור Post-Order - איטרטור הסורק את העץ בצורה הבאה: תת עץ שמאלי -> תת עץ ימני -> צומת נוכחית (האיטרטור הזה עובד בצורה הזאת עבור עץ בינארי בלבד! עבור עץ כללי החזירו סריקת DFS רגילה שמתחילה מהשורש של העץ).
-3. איטרטור In-Order  - איטרטור הסורק את העץ בצורה הבאה: תת עץ שמאלי -> צומת נוכחית -> תת עץ ימני (האיטרטור הזה עובד בצורה הזאת עבור עץ בינארי בלבד! עבור עץ כללי החזירו סריקת DFS רגילה שמתחילה מהשורש של העץ).
-5. איטרטור BFS - סריקת העץ לרוחב (משמאלי לימין) (עובד על עץ כללי).
-6. איטרטור DFS - סריקת העץ בעזרת אלגוריתם DFS (עובד על עץ כללי).
-7. איטרטור Heap - הפיכת עץ בינארי לערימת מינימום, לקריאה נוספת: https://he.wikipedia.org/wiki/%D7%A2%D7%A8%D7%99%D7%9E%D7%94_%D7%91%D7%99%D7%A0%D7%90%D7%A8%D7%99%D7%AA (פה אתם יכולים באלגוריתמים של הספרייה התקנית).
+# Tree Data Structure with SFML Visualization
+## Overview
+This project implements a tree data structure in C++ that can handle a variable number of children per node. It also provides visualization capabilities using the Simple and Fast Multimedia Library (SFML). The code supports both generic trees and binary trees, with different traversal iterators and methods to add nodes and visualize the tree.
 
-שם הקונטיינר צריך להיות `tree`. יש להגדיר את המתודות הבאות:
-1. המתודה `add_root` - הוספת השורש של העץ. המתודה מקבלת צומת כלשהו ושמה אותו בשורש העץ.
-2. המתודה `add_sub_node` - הוספת ילד לאב. המתודה מקבלת צומת בעץ וצומת כלשהו ויוצרת בן עבור אותו צומת.
-3. המתודות `begin_pre_order`, `end_pre_order`. המתודות מחזירות איטרטורים לצורך מעבור על העץ בשיטת Pre-Order.
-4. המתודות `begin_post_order`, `end_post_order`. המתודות מחזירות איטרטורים לצורך מעבור על העץ בשיטת Post-Order.
-5. המתודות `begin_in_order`, `end_in_order`. המתודות מחזירות איטרטורים לצורך מעבור על העץ בשיטת In-Order.
-6. המתודות `begin_bfs_scan`, `end_bfs_scan`. המתודות מחזירות איטרטורים לצורך מעבור על העץ בעזרת האלגוריתם BFS.
-7. המתודות `begin_dfs_scan`, `end_dfs_scan`. המתודות מחזירות איטרטורים לצורך מעבור על העץ בעזרת האלגוריתם DFS.
-8. המתודה `myHeap`. המתודה הופכת עץ בינארי לערימת מינימום וחזירה איטרטורים עבור הערימה שהתקבלה.
-9. יש לממש מפרק (Destructor) המוחק את כל העץ.
-10. פונקציית הדפסה. ההדפסה תתבצע בעזרת GUI. עליכם ליצור ממשק שמדפיס את העץ על המסך בצורה הגיוניות לשיקולכם.
+## Features
+**Generic Tree Structure**: The Tree class can handle any type of data and can have any number of children per node, specified by a template parameter k.
 
-יש לכתוב קובץ main שבו אתם מדגימים את אופן פעולת התוכנית. עליכם לכתוב מחלקה בשם Complex (המייצגת מספרים מדומים) ולהשתמש גם בה כדי להדגים את הקוד שלכם. (למדתם על המחלקה הזאת בתרגולים).
+**Binary Tree Specialization**: The Tree class is specialized for binary trees (i.e., trees with k=2), offering tailored functionality for binary tree operations.
 
-בנוסף, עליכם לכתוב בדיקות מקיפות לקוד שלכם.
+**Tree Visualization**: Uses SFML to visualize the tree structure in a graphical window. Each node is represented by a circle, and edges are drawn between parent and child nodes.
 
-כדי להשתמש ב-GUI אתם יכולים להיעזר בספרייה הבאה: https://wiki.qt.io/Qt_for_Beginners ובמדריך: https://www.youtube.com/watch?v=cXojtB8vS2E. כמובן שאתם יכולים להשתמש בכל ספרייה שאתם רוצים.
+ **Iterators**: Provides depth-first search (DFS), breadth-first search (BFS), and specific tree traversal iterators (in-order, pre-order, post-order).
+ 
+ **Customizable Precision**: Allows formatting node data with a specific precision for display.
+## Requirements
+**C++ Compiler**: Support for C++11 or later.
+**SFML**: Ensure SFML is installed and linked correctly. The font used for visualization is RobotoFlex-Regular.ttf, which should be located in the guiResources directory.
+## Files
+ `Tree.hpp`: Contains the implementation of the Tree class and its binary specialization.
+ 
+ `Node.hpp`: Defines the Node class used for the tree nodes.
+ 
+ `Iterators.hpp`: Defines iterator classes for traversing the tree in different orders.
 
-יש להוסיף קובץ Makefile כאשר הפקודה `make tree` מריצה את התוכנית הראשית שלכם. עליכם להגיש קובץ `README` המסביר את ההיררכיה של המחלקות ובאילו ספריות השתמשתם.
-כמו כן, עליכם לכתוב בתחילת כל קובץ את המייל שלכם. אי עמידה בהנחיות תגרור הפחתה בציון.
+ `Complex.hpp/cpp`: A class for complex numbers. The class overloads operators needed such as ==, > etc.
 
-בהצלחה!
-   
+ `Test.cpp, TestCounter.cpp, doctest.h`: Test file using doctest.
+
+ `Demo.cpp, ComplexDemo.cpp`: Demo files for the project.
+## Tree Class Template
+The Tree class template allows for the creation of a tree with a specified type T and a maximum number of children k.
+
+`Tree()` - constructor for the Tree. Initialize the root pointer to nullptr.
+
+`void add_root(Node<T> &root)` - Adds a root to the tree. Throws a std::runtime_error if the root already exists.
+
+`void add_sub_node(Node<T>& parent, Node<T> child)` - Adds the child to the parent. If the parent already has k children an runtime error is thrown.
+
+**Iterators**
+The Tree class provides various iterator methods to traverse the tree, notice that for k!=2, all binary tree traversers return DFSIterator:
+
+
+`DFSIterator<T> begin_in_order()` - Returns a DFSIterator to the start of the tree
+
+`DFSIterator<T> end_in_order()`  - Returns a DFSIterator to the end of the tree
+
+`DFSIterator<T> begin_pre_order()`  - Returns a DFSIterator to the start of the tree
+
+`DFSIterator<T> end_pre_order()`  - Returns a DFSIterator to the end of the tree
+
+`DFSIterator<T> begin_post_order()`  - Returns a DFSIterator to the start of the tree
+
+`DFSIterator<T> end_post_order()`  - Returns a DFSIterator to the end of the tree
+
+`BFSIterator<T> begin_bfs()`  - Returns a BFSIterator to the start of the tree
+
+`BFSIterator<T> end_bfs()`  - Returns a BFSIterator to the end of the tree
+
+`DFSIterator<T> begin_dfs()`  - Returns a DFSIterator to the start of the tree
+
+`DFSIterator<T> end_dfs()`  - Returns a DFSIterator to the end of the tree
+
+`BFSIterator<T> begin()`  - Returns a BFSIterator to the start of the tree, used as default
+
+`BFSIterator<T> end()`  - Returns a BFSIterator to the end of the tree, used as defautl
+
+`DFSIterator<T> make_heap_begin()`  - Returns a DFSIterator to the start of the tree
+
+`DFSIterator<T> make_heap_end()`  - Returns a DFSIterator to the end of the tree
+
+`~Tree()` - A destructor that clears all child nodes from the parent nodes and sets the root to nullptr.
+
+**Visualization**
+The Tree class includes a draw method that uses SFML to visualize the tree.
+
+
+`void draw()` - Creates the window and handeld the drawing. It's a public method.
+
+**Helper Functions(Private methods)**:
+`formatData`: Formats node data with a specified precision.
+
+`truncateText`: Truncates text and adds ellipsis if necessary.
+
+`calculateSubtreeWidth`: Calculates the width of a subtree to prevent node overlapping.
+
+`drawTree`: Recursively draws the tree nodes and edges.
+
+## Binary Tree Specialization
+The binary tree specialization of the Tree class provides more specific methods for trees with k=2.
+
+**Iterators**
+
+Provides in-order, pre-order, post-order, BFS, DFS, and heap traversal iterators similar to the generic tree class. 
+It's differ from the general template, as the general template returns only DFSIterator for the binary Iterators, in the specialize case it return the requried iterator.
+
+**Visualization for Binary Tree**
+
+The binary tree visualization does not require calculateSubtreeWidth as binary trees do not overlap nodes.
+
+## Usage
+Use `make` to compile the program.
+
+Run the Program: The draw method opens an SFML window to visualize the tree. You can run `test` or `demo` or `ComplexDemo`.
+
+Example Code:
+
+```#include "Tree.hpp"
+int main()
+{
+    Tree<int, 3> tree;  // Creates a tree that allows up to 3 children per node.
+
+    Node<int> root(1);
+    tree.add_root(root);
+
+    Node<int> child1(2);
+    Node<int> child2(3);
+
+    tree.add_sub_node(root, child1);
+    tree.add_sub_node(root, child2);
+
+    tree.draw();  // Opens a window to visualize the tree.
+
+    return 0;
+}
+```
+
+**Notes**
+Ensure that SFML is installed and the paths are correctly set for linking.
+
+Modify guiResources/RobotoFlex-Regular.ttf path if the font is located elsewhere.
+
+The visualization requires a graphical environment.
