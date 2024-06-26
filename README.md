@@ -19,6 +19,8 @@ This project implements a tree data structure in C++ that can handle a variable 
 **C++ Compiler**: Support for C++11 or later.
 **SFML**: Ensure SFML is installed and linked correctly. The font used for visualization is RobotoFlex-Regular.ttf, which should be located in the guiResources directory.
 ## Files
+ `guiResouces`: A directory contains the files needed for the GUI. For now, all needed there is the font used.
+ 
  `Tree.hpp`: Contains the implementation of the Tree class and its binary specialization.
  
  `Node.hpp`: Defines the Node class used for the tree nodes.
@@ -127,7 +129,8 @@ int main()
 }
 ```
 
-**Notes**
+**Notes:**
+
 Ensure that SFML is installed and the paths are correctly set for linking.
 
 Modify guiResources/RobotoFlex-Regular.ttf path if the font is located elsewhere.
